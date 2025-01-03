@@ -57,14 +57,14 @@
                 url.hostname === location.hostname && url.href == location.href;
   
               if (isInvalidUrl) {
-                //location.replace(homepage);
+                location.replace(homepage);
                 console.log(title)
               } else {
                 location.replace(title);
               }
             } catch (e) {
               console.log(title)
-              //location.replace(homepage);
+              location.replace(homepage);
             }
           };
           
@@ -102,14 +102,14 @@
                 url.hostname === location.hostname && url.href == location.href;
   
               if (isInvalidUrl) {
-                //location.replace(homepage);
-                console.log(title)
+                console.log(message)
+                location.replace(homepage);
               } else {
-                location.replace(title);
+                location.replace(message);
               }
             } catch (e) {
-              console.log(title)
-              //location.replace(homepage);
+              console.log(message)
+              location.replace(homepage);
             }
           };
           
