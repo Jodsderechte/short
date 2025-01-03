@@ -63,10 +63,11 @@
             location.replace(homepage);
           }
         };
-
+        
         xhr.onerror = function () {
           location.replace(homepage);
         };
+        console.log(issueNumber)
         xhr.open("GET", GITHUB_ISSUES_LINK + issueNumber);
         xhr.send();
       }
