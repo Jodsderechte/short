@@ -82,7 +82,7 @@
               var title;
               payload.every((element) => {
                 if (element.title === issueNumber) {
-                  message = element.message
+                  message = element.body
                   title = element.title
                   return false;
                 }
