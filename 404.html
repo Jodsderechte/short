@@ -8,8 +8,10 @@
        * Configuration goes here
        */
       // Format: https://api.github.com/repos/{owner}/{repo}/issues/
-      var GITHUB_ISSUES_LINK =
+      var GITHUB_SPECIFIC_ISSUE_LINK =
         "https://api.github.com/repos/jodsderechte/shorten/issues/";
+      var GITHUB_ISSUES_LINK =
+        "https://api.github.com/repos/jodsderechte/shorten/issues";
       var PATH_SEGMENTS_TO_SKIP = 1;
 
       /**
@@ -36,41 +38,88 @@
           location.pathname.split("/")[PATH_SEGMENTS_TO_SKIP];
 
         var xhr = new XMLHttpRequest();
-
-        xhr.onload = function () {
-          try {
-            var payload = JSON.parse(xhr.response);
-            var message = payload.message;
-            var title = payload.title;
-
-            // Workaround IE 11 lack of support for new URL()
-            var url = document.createElement("a");
-            url.setAttribute("href", title);
-
-            // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
-            var isInvalidUrl =
-              message === "Not Found" ||
-              !title ||
-              !isUrl(title) ||
-              url.hostname === location.hostname;
-
-            if (isInvalidUrl) {
-              //location.replace(homepage);
+        if (/^\d+$/.test(issueNumber)) {
+          xhr.onload = function () {
+            try {
+              var payload = JSON.parse(xhr.response);
+              var message = payload.message;
+              var title = payload.title;
+  
+              // Workaround IE 11 lack of support for new URL()
+              var url = document.createElement("a");
+              url.setAttribute("href", title);
+  
+              // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
+              var isInvalidUrl =
+                message === "Not Found" ||
+                !title ||
+                !isUrl(title) ||
+                url.hostname === location.hostname && url.href == location.href;
+  
+              if (isInvalidUrl) {
+                //location.replace(homepage);
+                console.log(title)
+              } else {
+                location.replace(title);
+              }
+            } catch (e) {
               console.log(title)
-            } else {
-              location.replace(title);
+              //location.replace(homepage);
             }
-          } catch (e) {
-            console.log(title)
-            //location.replace(homepage);
-          }
-        };
+          };
+          
+          xhr.onerror = function () {
+            location.replace(homepage);
+          };
+          console.log(issueNumber)
         
-        xhr.onerror = function () {
-          location.replace(homepage);
-        };
-        console.log(issueNumber)
-        xhr.open("GET", GITHUB_ISSUES_LINK + issueNumber);
+          xhr.open("GET", GITHUB_SPECIFIC_ISSUE_LINK + issueNumber);
+        } else {
+          xhr.onload = function () {
+            try {
+              var payload = JSON.parse(xhr.response);
+              var message;
+              var title;
+              payload.every((element) => {
+                if (element.title === issueNumber) {
+                  message = element.message
+                  title = element.title
+                  return false;
+                }
+                 console.log(element.title) 
+                return true;
+              });
+  
+              // Workaround IE 11 lack of support for new URL()
+              var url = document.createElement("a");
+              url.setAttribute("href", message);
+  
+              // Invalid URLs includes invalid issue numbers, issue titles that are not URLs, and recursive destination URLs
+              var isInvalidUrl =
+                message === "Not Found" ||
+                !message ||
+                !isUrl(message) ||
+                url.hostname === location.hostname && url.href == location.href;
+  
+              if (isInvalidUrl) {
+                //location.replace(homepage);
+                console.log(title)
+              } else {
+                location.replace(title);
+              }
+            } catch (e) {
+              console.log(title)
+              //location.replace(homepage);
+            }
+          };
+          
+          xhr.onerror = function () {
+            location.replace(homepage);
+          };
+          console.log(issueNumber)
+          xhr.open("GET", GITHUB_ISSUES_LINK);
+        }
+        
         xhr.send();
       }
 
