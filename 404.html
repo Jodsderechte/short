@@ -29,14 +29,15 @@
         var issueNumber = location.pathname.split("/")[
           PATH_SEGMENTS_TO_SKIP + 1
         ];
-        var homepage =
+        var homepage = "https://florian-reichle.de/404"
+        /**
           location.protocol +
           "//" +
           location.hostname +
           (location.port ? ":" + location.port : "") +
           "/" +
           location.pathname.split("/")[PATH_SEGMENTS_TO_SKIP];
-
+        **/
         var xhr = new XMLHttpRequest();
         if (/^\d+$/.test(issueNumber)) {
           xhr.onload = function () {
