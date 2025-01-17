@@ -81,7 +81,7 @@
               var message;
               var title;
               payload.every((element) => {
-                if (element.title === issueNumber) {
+                if (element.title.toLowerCase() === issueNumber.toLowerCase()) {
                   message = element.body
                   title = element.title
                   return false;
